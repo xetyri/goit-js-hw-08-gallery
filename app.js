@@ -63,3 +63,69 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+// /////////////////////////////////////////////////////////////////////////
+
+const ElemGallery = document.querySelector('.js-gallery');
+const ElemBox = document.querySelector('.js-lightbox');
+const ElemBoxImg = document.querySelector('.lightbox__image');
+const ElemButton = document.querySelector('.lightbox__button');
+
+const addGalleryElement = function () {
+  return galleryItems.reduce((acc, elements) =>
+    acc +
+    `<li class="gallery__item">
+      <a class="gallery__link" href="${elements.original}">
+        <img class="gallery__image" src="${elements.preview}" data-source="${elements.original}" alt="${elements.description}"/>
+      </a>
+    </li>`, ""
+  );
+}
+
+// console.log(addGalleryElement());
+
+// /////////////////////////////////////////////////////////////////////////
+
+ElemGallery.insertAdjacentHTML("beforeend", addGalleryElement());
+ElemGallery.addEventListener("click", OpenImage);
+
+function OpenImage(event) {
+  const ClickImg = event.target;
+  event.preventDefault();
+  if (ClickImg !== event.currentTarget) {
+     const NewLink = ClickImg.dataset.source;
+     ElemBoxImg.src = NewLink;
+       ElemBox.classList.add("is-open");
+  }
+  
+ return;
+}
+
+// /////////////////////////////////////////////////////////////////////////
+
+const CloseImage = function() {
+  ElemBoxImg.src = "";
+  ElemBox.classList.remove("is-open");
+};
+
+ElemButton.addEventListener("click", CloseImage);
+
+// /////////////////////////////////////////////////////////////////////////
+
+// Закрытие ESC
+
+const CloseEsc = function(event) {
+  if (event.code === "Escape") {
+    CloseImage();
+  }
+};
+window.addEventListener("keydown", CloseEsc);
+
+// Закрытие по нажатию на окно
+
+const CloseWind = function (event) {
+  if (event.target === ElemBoxImg) {
+    CloseImage();
+  }
+}
+ElemBox.addEventListener("click", CloseWind);
